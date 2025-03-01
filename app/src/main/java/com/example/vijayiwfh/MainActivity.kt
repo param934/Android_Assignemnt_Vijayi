@@ -5,14 +5,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
 import com.example.vijayiwfh.apiData.SourceViewModel
 import com.example.vijayiwfh.di.appModule
-import com.example.vijayiwfh.ui.theme.DetailsScreen
 import com.example.vijayiwfh.ui.theme.VijayiWFHTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.compose.koinViewModel
