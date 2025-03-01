@@ -1,45 +1,52 @@
+package com.example.vijayiwfh.apiData
+
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
+import android.widget.Toast
 import com.example.vijayiwfh.apiData.Movie
+import com.example.vijayiwfh.apiData.TMDbService
 import com.example.vijayiwfh.apiData.TVShow
-import com.example.vijayiwfh.apiData.isNetworkAvailable
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
+// Repository
 class SourceRepository(private val application: Application) {
-
-    private val api = WatchmodeService.api
+    private val api = TMDbService.api
 
     fun fetchMoviesAndTVShows(): Single<Pair<List<Movie>, List<TVShow>>> {
-        val movieUrl = "https://api.watchmode.com/v1/list-titles/?apiKey=${ApiConfig.API_KEY}&type=movie&page=1&limit=10"
-        val tvShowUrl = "https://api.watchmode.com/v1/list-titles/?apiKey=${ApiConfig.API_KEY}&type=tvshows&page=1&limit=10"
+        if (!isNetworkAvailable(application)) {
+            Toast.makeText(application, "No internet connection!", Toast.LENGTH_SHORT).show()
+            return Single.error(Exception("No internet connection"))
+        }
 
-        Log.d("API_REQUEST", "Fetching movies from: $movieUrl")
-        Log.d("API_REQUEST", "Fetching TV shows from: $tvShowUrl")
-
-        return Single.zip(
+        return Single.zip<List<Movie>, List<TVShow>, Pair<List<Movie>, List<TVShow>>>(
             api.getMovies()
-                .doOnSubscribe { Log.d("API_CALL", "Calling Movies API...") }
-                .doOnSuccess { response -> Log.d("API_RAW_RESPONSE", "Movies Response: $response") }
-                .map { it.movies ?: emptyList() }
-                .doOnError { error -> Log.e("API_ERROR", "Error fetching movies: ${error.message}", error) }
+                .map { it.results ?: emptyList() }  // Fixed mapping
                 .subscribeOn(Schedulers.io()),
 
             api.getTVShows()
-                .doOnSubscribe { Log.d("API_CALL", "Calling TV Shows API...") }
-                .doOnSuccess { response -> Log.d("API_RAW_RESPONSE", "TV Shows Response: $response") }
-                .map { it.tvShows ?: emptyList() }
-                .doOnError { error -> Log.e("API_ERROR", "Error fetching TV shows: ${error.message}", error) }
+                .map { it.results ?: emptyList() }  // Fixed mapping
                 .subscribeOn(Schedulers.io())
         ) { movies, tvShows ->
-            Log.d("API_FINAL", "Final Movies Count: ${movies.size}")
-            Log.d("API_FINAL", "Final TV Shows Count: ${tvShows.size}")
             Pair(movies, tvShows)
         }
-            .doOnError { error -> Log.e("API_ERROR", "Error in final API processing: ${error.message}", error) }
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { error ->
+                Log.e("SourceRepository", "Error fetching data", error)
+                Toast.makeText(application, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+        return connectivityManager?.let {
+            val network = it.activeNetwork ?: return false
+            val activeNetwork = it.getNetworkCapabilities(network) ?: return false
+            activeNetwork.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        } ?: false
+    }
 }

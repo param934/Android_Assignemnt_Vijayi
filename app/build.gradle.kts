@@ -40,8 +40,10 @@ android {
 }
 
 dependencies {
-//    implementation (libs.koin.android)
-//    implementation (libs.koin.androidx.viewmodel)
+    implementation (libs.koin.android)
+    implementation (libs.koin.androidx.compose)
+    implementation(libs.compose.shimmer)
+    implementation(libs.coil.compose)
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
     implementation(libs.adapter.rxjava3)
@@ -56,6 +58,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
