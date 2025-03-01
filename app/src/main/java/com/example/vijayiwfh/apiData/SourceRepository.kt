@@ -6,30 +6,23 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import android.widget.Toast
-import com.example.vijayiwfh.apiData.Movie
-import com.example.vijayiwfh.apiData.TMDbService
-import com.example.vijayiwfh.apiData.TVShow
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-// Repository
-class SourceRepository(private val application: Application) {
-    private val api = TMDbService.api
+class SourceRepository(private val application: Application, private val api: TMDbApi) {
 
     fun fetchMoviesAndTVShows(): Single<Pair<List<Movie>, List<TVShow>>> {
         if (!isNetworkAvailable(application)) {
             Toast.makeText(application, "No internet connection!", Toast.LENGTH_SHORT).show()
             return Single.error(Exception("No internet connection"))
         }
-
-        return Single.zip<List<Movie>, List<TVShow>, Pair<List<Movie>, List<TVShow>>>(
+        return Single.zip(
             api.getMovies()
-                .map { it.results ?: emptyList() }  // Fixed mapping
+                .map { it.results }
                 .subscribeOn(Schedulers.io()),
-
             api.getTVShows()
-                .map { it.results ?: emptyList() }  // Fixed mapping
+                .map { it.results }
                 .subscribeOn(Schedulers.io())
         ) { movies, tvShows ->
             Pair(movies, tvShows)
