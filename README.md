@@ -73,11 +73,6 @@ A Jetpack Compose Android app that **fetches popular movies and TV shows** from 
 - **Handled network failures** by showing **Toast messages**.  
 - **Managed empty responses** and **unexpected API failures**.  
 
-6️⃣ **Writing Unit Tests**  
-- Implemented unit tests for **Repository & ViewModel** using **JUnit & MockK**.  
-- Faced **challenges mocking dependencies** (e.g., `mockk()`, `KoinTestRule`).  
-- Resolved **dependency issues** when upgrading **Gradle & Koin**.  
-
 ---
 
 ## **🤯 Challenges Faced & How They Were Solved**  
@@ -132,7 +127,7 @@ A Jetpack Compose Android app that **fetches popular movies and TV shows** from 
 ---
 
 ## **👨‍💻 Author**  
-📌 **Developed By:** Param 
+📌 **Developed By:** Param .
 📌 **Email:** param21340@iiitd.ac.in
 
 ---
@@ -143,6 +138,3 @@ A Jetpack Compose Android app that **fetches popular movies and TV shows** from 
 This project was a great learning experience in **API integration, Jetpack Compose, RxKotlin, and Dependency Injection (Koin)**.  
 Hope you find this README helpful! 😊  
 
----
-
-Let me know if you'd like any refinements! 🚀
