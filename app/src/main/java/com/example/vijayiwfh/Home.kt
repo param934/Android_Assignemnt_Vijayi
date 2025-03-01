@@ -27,7 +27,6 @@ import com.example.vijayiwfh.apiData.SourceViewModel
 import com.example.vijayiwfh.apiData.TVShow
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: SourceViewModel, navController: NavHostController) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
