@@ -127,7 +127,7 @@ A Jetpack Compose Android app that **fetches popular movies and TV shows** from 
 ---
 
 ## **👨‍💻 Author**  
-📌 **Developed By:** Param .
+📌 **Developed By:** Param.
 📌 **Email:** param21340@iiitd.ac.in
 
 ---
